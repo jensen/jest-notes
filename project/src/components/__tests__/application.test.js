@@ -2,7 +2,7 @@ import {
   render,
   fireEvent,
   act,
-  waitForElement,
+  waitFor,
   waitForElementToBeRemoved,
 } from "@testing-library/react";
 import React from "react";
@@ -22,7 +22,7 @@ describe("Application Component", () => {
 
     const { getByText } = render(<Application />);
 
-    await waitForElement(() => getByText("You have not fixed any bugs."));
+    await waitFor(() => getByText("You have not fixed any bugs."));
 
     fireEvent.click(getByText("Bug"));
     fireEvent.click(getByText("Bug"));
