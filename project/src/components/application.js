@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { getUpgrades } from "utils/api";
 import Status from "components/status";
 import Bug from "components/bug";
 import Upgrades, { Upgrade } from "components/upgrades";
@@ -9,16 +10,27 @@ const Application = () => {
   const { bugs, addBug, removeBug } = useBugTracker();
   const { bps, addBps } = useAutoFix(addBug);
 
+  const [upgrades, setUpgrades] = useState({
+    loading: true,
+    data: null,
+  });
+
+  useEffect(() => {
+    getUpgrades().then((upgrades) =>
+      setUpgrades({ loading: false, data: upgrades })
+    );
+  }, []);
+
+  if (upgrades.loading) return <div>Loading</div>;
+
   return (
     <main>
       <Status bugs={bugs} bps={bps} />
       <Bug onClick={() => addBug(1)} />
       <Upgrades bugs={bugs} increaseBps={addBps} decreaseBugs={removeBug}>
-        <Upgrade label="console.log" cost={10} bps={1} />
-        <Upgrade label="Debugger" cost={100} bps={5} />
-        <Upgrade label="Chrome Development Tools" cost={100} bps={5} />
-        <Upgrade label="Documentataion" cost={500} bps={50} />
-        <Upgrade label="Mentor" cost={1000} bps={25} />
+        {upgrades.data.map((upgrade) => (
+          <Upgrade key={upgrade.label} {...upgrade} />
+        ))}
       </Upgrades>
     </main>
   );

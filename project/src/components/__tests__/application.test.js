@@ -1,16 +1,28 @@
-import { render, fireEvent, act } from "@testing-library/react";
+import {
+  render,
+  fireEvent,
+  act,
+  waitForElement,
+  waitForElementToBeRemoved,
+} from "@testing-library/react";
 import React from "react";
 import Application from "components/application";
 
+jest.mock("utils/api");
+
 describe("Application Component", () => {
-  it("should render without crashing", () => {
-    render(<Application />);
+  it("should render without crashing", async () => {
+    const { getByText } = render(<Application />);
+
+    await waitForElementToBeRemoved(() => getByText("Loading"));
   });
 
-  it("should allow the auto fixer to increase the bug counts", () => {
+  it("should allow the auto fixer to increase the bug counts", async () => {
     jest.useFakeTimers();
 
     const { getByText } = render(<Application />);
+
+    await waitForElement(() => getByText("You have not fixed any bugs."));
 
     fireEvent.click(getByText("Bug"));
     fireEvent.click(getByText("Bug"));
@@ -36,13 +48,13 @@ describe("Application Component", () => {
     expect(getByText("Fixing 1 bug per second.")).toBeInTheDocument();
 
     act(() => {
-      jest.runAllTimers();
+      jest.advanceTimersByTime(1000);
     });
 
     expect(getByText("You have fixed 1 bug.")).toBeInTheDocument();
 
     act(() => {
-      jest.runAllTimers();
+      jest.advanceTimersByTime(1000);
     });
 
     expect(getByText("You have fixed 2 bugs.")).toBeInTheDocument();
@@ -52,7 +64,7 @@ describe("Application Component", () => {
     expect(getByText("You have fixed 3 bugs.")).toBeInTheDocument();
 
     act(() => {
-      jest.runAllTimers();
+      jest.advanceTimersByTime(1000);
     });
 
     expect(getByText("You have fixed 4 bugs.")).toBeInTheDocument();

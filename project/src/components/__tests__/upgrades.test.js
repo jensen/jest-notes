@@ -18,14 +18,14 @@ describe("Upgrades Component", () => {
     const decreaseBugs = jest.fn();
 
     const { getByText } = render(
-      <Upgrades bugs={1} increaseBps={increaseBps} decreaseBugs={decreaseBugs}>
-        <Upgrade label="Improve" cost={1} bps={1} />
+      <Upgrades bugs={2} increaseBps={increaseBps} decreaseBugs={decreaseBugs}>
+        <Upgrade label="Improve" cost={2} bps={1} />
       </Upgrades>
     );
 
-    fireEvent.click(getByText("Improve (1)"));
+    fireEvent.click(getByText("Improve (2)"));
 
     expect(increaseBps).toHaveBeenCalledWith(1);
-    expect(decreaseBugs).toHaveBeenCalledWith(1);
+    expect(decreaseBugs).toHaveBeenCalledWith(2);
   });
 });
