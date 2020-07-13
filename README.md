@@ -248,6 +248,10 @@ The third way is more complicated, but it allows us to return different values f
 
 During the activities today, it will be necessary to mock the `axios` module resolved values for functions.
 
+### Timer Mocks
+
+One category of mocks provided by Jest are the [timer mocks](https://jestjs.io/docs/en/timer-mocks). The `jest.useFakeTimers()`, `jest.runAllTimers()` and `jest.advanceTimersByTime(1000)` functions are all examples of timer mocks. In our example today we will use these mocks to control the timers in our application.
+
 ## Coverage
 
 Coverage reporting is a contentious topic. Code coverage percentage alone confirm that we have confidence. If code coverage becomes the primary metric for which we base success in testing, then we might make decisisons that increase our code coverage but not our test quality.
