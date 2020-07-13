@@ -250,27 +250,83 @@ During the activities today, it will be necessary to mock the `axios` module res
 
 ## Coverage
 
-## Async
+Coverage reporting is a contentious topic. Code coverage percentage alone confirm that we have confidence. If code coverage becomes the primary metric for which we base success in testing, then we might make decisisons that increase our code coverage but not our test quality.
 
-The waitForElement function is being deprecated. Check version of dom-testing-library.
+We can run the tools built into jest that provide coverage reporting. The artifacts created during the process serve as an excellent tool to guide testing. It is still up to us to decide what quality tests we should write for the code that is not covered yet.
 
-Breaking Changes in [7.0.0](https://github.com/testing-library/dom-testing-library/releases/tag/v7.0.0)
+## Async Tests
+
+Some of our tests are asynchronous, which means that we don't know how long they will take to execute. Jest doesn't know either so we have two different ways to inform jest that we are performing an async test.
+
+1) Use the `done` callback that is passed into a test block, like `it("should call done when the test is complete", (done) => ...)`. This is called the "callback" approach.
+2) Return a promise from our test. We can either do this explicitly with `return createsPromise()` or implicitly by using the `async` keyword.
+
+### Async/Await
+
+This brings up a feature of JavaScript that we may have heard about, but may not have used much until now. The Async/Await syntax is intentionally avoided early to emphasis learning promises. We will use the `async/await` syntax for our tests to gain familiarity. It is import to note a few things about this syntax.
+
+1) It looks easier, because it looks synchronous.
+2) It still uses Promises under the surface, so we still need to understand them.
+3) There is no `Promise.all` equivalent for `async/await`.
+
+When we write our async test, we know what we are waiting for. In this case we want the loading operation to complete before the test is done.
+
+```javascript
+it("should render without crashing", async () => {
+  const { getByText } = render(<Application />);
+
+  await waitForElementToBeRemoved(() => getByText("Loading"));
+});
+```
+
+There are other `wait*` functions provided by the `dom-testing-library`. These return promises and can be used with our queries. It is important to note that we don't pass the actual element. Instead we pass a function that returns the element we are waiting on.
+
+#### Caution
+
+> The waitForElement function is being deprecated. Breaking Changes were introduced in [7.0.0](https://github.com/testing-library/dom-testing-library/releases/tag/v7.0.0). The project uses `react-testing-library` verson `8.0.7` which depends on version `5.5.4` of `dom-testing-library`. This means that some of the functions in the current documentation are not available in our version of `react-testing-library`. In this case we use `waitForElement` instead of `waitFor` until the package is upgraded.
 
 ## Live Example
 
-[Paperclip Factory](https://www.decisionproblem.com/paperclips/index2.html)
-[Cookie Clicker](https://orteil.dashnet.org/cookieclicker/)
+The live example today is inspired by games like [Paperclip Factory](https://www.decisionproblem.com/paperclips/index2.html) and [Cookie Clicker](https://orteil.dashnet.org/cookieclicker/).
+
+When a user clicks the "Bug" button, they will increase their bug fix count by 1. The bug count is also currency that can be used to buy upgrades that automatically fix bugs every second. When the application first loads, it needs to receive the list of upgrades asynchronously.
 
 ## More Guidance
 
 ### Debugging Tests
 
+While we are running tests, it is hard to imagine what the DOM looks like. The `@testing-library` provides a few options for debugging. Use a combination of [prettyDOM](https://testing-library.com/docs/dom-testing-library/api-helpers#prettydom) and `console.log` for specific elements. To output the entire component tree we can use the `debug` function returned by `render`.
+
+```javascript
+import { render } from "@testing-library/react";
+
+it("should debug our component DOM tree", () => {
+  const { debug } = render(<Application />);
+  
+  debug();
+});
+```
+
+We also get output when our DOM assertions fail, but with the described tools we can gain control of when we create our debug output.
+
 ### Setup & Teardown
 
-https://jestjs.io/docs/en/setup-teardown
+Any common actions that need to be done before or after a group of tests can make use of the setup or teardown functions. A good overview is found in the [official documentation](https://jestjs.io/docs/en/setup-teardown).
 
-## Applications Will Break Today
+### Applications Will Break Today
 
+It is very possible that as tests are added to the project fragile code will be surfaced. Depending on when the tests were last run, it is possible that some of those tests don't pass currently. This a very important process to gain experience in. At first it will be frustrating, but the ultimate outcome is more confidence.
 
+Some of the things that could possible cause your application to break when testing are:
+
+- Code becomes asynchronous but the tests don't indiate that.
+- Code that mutates underlying state will change the initial test values, so they are no longer predictable for the following test.
+- Code relies on a another API call that hasn't been mocked with the expected values.
+
+If tests don't pass, it isn't a bad thing. We want to find bugs before our users do.
 
 ## Bonus
+
+Today we discussed a lot about testing and didn't focus much on the architecture of the application. An interesting pattern can be found in the `src/components/upgrades.js` file. We use child composition to reduce the number of props that need to be passed to the `Upgrade` components.
+
+The parent `Upgrades` component has the ability to inject props into the child `Upgrade` components.
