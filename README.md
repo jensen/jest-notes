@@ -323,7 +323,7 @@ It is very possible that as tests are added to the project fragile code will be 
 
 Some of the things that could possible cause your application to break when testing are:
 
-- Code becomes asynchronous but the tests don't indiate that.
+- Code becomes asynchronous but the tests don't indicate that.
 - Code that mutates underlying state will change the initial test values, so they are no longer predictable for the following test.
 - Code relies on a another API call that hasn't been mocked with the expected values.
 
