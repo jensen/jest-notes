@@ -256,7 +256,7 @@ One category of mocks provided by Jest are the [timer mocks](https://jestjs.io/d
 
 Coverage reporting is a contentious topic. Code coverage percentage alone confirm that we have confidence. If code coverage becomes the primary metric for which we base success in testing, then we might make decisisons that increase our code coverage but not our test quality.
 
-We can run the tools built into jest that provide coverage reporting. The artifacts created during the process serve as an excellent tool to guide testing. It is still up to us to decide what quality tests we should write for the code that is not covered yet.
+We can run the tools built into jest that provide coverage reporting with `npm test -- --coverage --watchAll=false`. The artifacts created during the process serve as an excellent tool to guide testing. It is still up to us to decide what quality tests we should write for the code that is not covered yet.
 
 ## Async Tests
 
