@@ -291,7 +291,7 @@ There are other `wait*` functions provided by the `dom-testing-library`. These r
 
 ## Live Example
 
-The live example today is inspired by games like [Paperclip Factory](https://www.decisionproblem.com/paperclips/index2.html) and [Cookie Clicker](https://orteil.dashnet.org/cookieclicker/).
+The live example today is inspired by games like [Paperclip Factory](https://www.decisionproblem.com/paperclips/index2.html), [Cookie Clicker](https://orteil.dashnet.org/cookieclicker/) and [A Dark Room](http://adarkroom.doublespeakgames.com/).
 
 When a user clicks the "Bug" button, they will increase their bug fix count by 1. The bug count is also currency that can be used to buy upgrades that automatically fix bugs every second. When the application first loads, it needs to receive the list of upgrades asynchronously.
 
