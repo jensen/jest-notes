@@ -4,11 +4,9 @@ import Status from "components/status";
 import Bug from "components/bug";
 import Upgrades, { Upgrade } from "components/upgrades";
 import useBugTracker from "hooks/use-bugtracker";
-import useAutoFix from "hooks/use-autofix";
 
 const Application = () => {
-  const { bugs, addBug, removeBug } = useBugTracker();
-  const { bps, addBps } = useAutoFix(addBug);
+  const { bugs, addBug, removeBug, bps, addBps } = useBugTracker();
 
   const [upgrades, setUpgrades] = useState({
     loading: true,
